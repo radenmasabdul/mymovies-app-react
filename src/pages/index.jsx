@@ -1,13 +1,17 @@
 import { Component } from "react";
 import "../styles/App.css";
+import axios from "axios";
+
 import Layout from "../components/layout";
 import Cards from "../components/cards";
+import { ButtonsLoad } from "../components/buttonsFav";
 
 class Home extends Component {
   state = {
-    title: "REKOMENDASI POPULER",
+    title: "NOW PLAYING",
     datas: [],
     loading: true,
+    page : 1,
   };
 
   componentDidMount() {
@@ -15,18 +19,26 @@ class Home extends Component {
   }
 
   fetchData() {
-    let dataTemp = [];
-    for (let i = 0; i < 20; i++) {
-      const temp = {
-        id: i + 1,
-        title: `NARUTO SHIPPUDEN #EPS${i + 1}`,
-        image:
-          "https://upload.wikimedia.org/wikipedia/id/a/ad/Naruto_-_Shippuden_DVD_season_1_volume_1.jpg",
-      };
-      dataTemp.push(temp);
-    }
-    this.setState({ datas: dataTemp });
+    this.setState ({loading : true});
+    axios
+      .get (
+        `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_KEY}&page=${this.state.page}`
+      )
+      .then ((res) => {
+        const { results } = res.data;
+        const newPage = this.state.page + 1;
+        const temp = [...this.state.datas];
+        temp.push(...results);
+        this.setState({datas : temp, page : newPage});
+      })
+      .catch ((err) => {
+        console.log(err);
+      })
+      .finally (() => {
+        this.setState ({ loading : false});
+      });
   }
+
   render() {
     return (
       <Layout>
@@ -36,11 +48,16 @@ class Home extends Component {
             {this.state.datas.map((data) => (
               <Cards
               key = {data.id}
-              image = {data.image}
+              image = {data.poster_path}
               title = {data.title}
               judul = {data.title}
               />
             ))}
+          </div>
+          <div className="flex flex-wrap justify-center py-5">
+            <div>
+            <ButtonsLoad label="Load More" onClick={() => this.fetchData()} />
+            </div>
           </div>
         </div>
       </Layout>

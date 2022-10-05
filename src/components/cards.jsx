@@ -6,7 +6,7 @@ class Cards extends Component {
   render() {
     return (
           <div className="flex flex-col justify-center p-4 shadow-lg rounded-lg border">
-                <img src={this.props.image} alt={this.props.title} />
+                <img src={`https://image.tmdb.org/t/p/w500${this.props.image}`} alt={this.props.title} />
                 <p className="text-color-black font-jakarta-sans text-center py-3">{this.props.title}</p>
                 
                 <div className="flex flex-wrap justify-center">
