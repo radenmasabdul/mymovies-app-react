@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 
-import SearchBar from "./searchBar";
+import SearchBar from "./SearchBar";
 import { FaSun } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 class Layout extends Component {
   render() {
@@ -11,9 +12,11 @@ class Layout extends Component {
       <nav className="flex flex-wrap items-center justify-between px-2 py-3 bg-gray-500 mb-3 sticky top-0">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           <div className="w-full flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-            <a className="font-jakarta-sans text-2xl font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white" href="#test">
+            <Link to="/">
+            <button className="font-jakarta-sans text-2xl font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">
               My Movies
-            </a>
+            </button>
+            </Link>
           </div>
           <div>
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">

@@ -2,11 +2,13 @@ import { Component } from "react";
 import "../styles/App.css";
 import axios from "axios";
 
-import Layout from "../components/layout";
-import Cards from "../components/cards";
-import { ButtonsLoad } from "../components/buttonsFav";
+import { WithRouter } from "../utils/Navigations";
 
-class Home extends Component {
+import Layout from "../components/Layout";
+import Cards from "../components/Cards";
+import { ButtonsLoad } from "../components/Buttons";
+
+class App extends Component {
   state = {
     title: "NOW PLAYING",
     datas: [],
@@ -39,6 +41,47 @@ class Home extends Component {
       });
   }
 
+  fetchPopular() {
+    fetch(
+      `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_KEY}&page=${this.state.page}`
+    )
+      .then((response) => response.json())
+      .then((res) => {
+        const { results } = res; // destructuring
+        // const results = res.data.results;
+        const newPage = this.state.page + 1;
+        const temp = [...this.state.datas]; // spread operator
+        temp.push(...results); // spread operator
+        this.setState({ datas: temp, page: newPage });
+      })
+      .catch((err) => {
+        alert(err.toString());
+      })
+      .finally(() => {
+        this.setState({ loading: false });
+      });
+  }
+
+  handleFav(movie) {
+    const getMovies = localStorage.getItem("favMovies");
+    if (getMovies) {
+      const parsedMovies = JSON.parse(getMovies);
+      /*
+      cek film yang diinputkan ada di local storage atau tidak (saran menggunakan method .find)
+      if movie.id === data.id
+
+      - kalau gak ada, push ke parsedMovies
+      - kalau ada, kasih alert (film sudah ditambahkan sebelumnya)
+      */
+      parsedMovies.push(movie);
+      const temp = JSON.stringify(parsedMovies);
+      localStorage.setItem("favMovies", temp);
+    } else {
+      const temp = JSON.stringify([movie]);
+      localStorage.setItem("favMovies", temp);
+    }
+  }
+
   render() {
     return (
       <Layout>
@@ -50,7 +93,10 @@ class Home extends Component {
               key = {data.id}
               image = {data.poster_path}
               title = {data.title}
-              judul = {data.title}
+              onNavigate={() =>
+                this.props.navigate(`/detail/${data.id}`)
+              }
+              addFavorite={() => this.handleFav(data)}
               />
             ))}
           </div>
@@ -65,4 +111,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default WithRouter(App);

@@ -1,28 +1,61 @@
-import React, { Component } from 'react';
-import "../styles/App.css";
+import React, { Component } from 'react'
+import Container from '../components/Layout';
+import {WithRouter} from "../utils/Navigations"
+import axios from 'axios';
 
 class DetailsMovies extends Component {
+
+  state = {
+    data : {},
+    loading : true,
+  };
+
+  componentDidMount () {
+    this.fetchData();
+  }
+
+  fetchData () {
+    const { id_movie } = this.props.params;
+    axios
+    .get (`https://api.themoviedb.org/3/movie/${id_movie}?api_key=${process.env.REACT_APP_TMDB_KEY}`)
+    .then ((res) => {
+      const { data } = res;
+      this.setState({ data });
+    })
+    .catch((err) => {
+      alert(err.toString());
+    })
+    .finally (()=> {
+      this.setState({ loading : false});
+    })
+  }
+
   render() {
     return (
-      <div class="md:container md:mx-auto border-2 border-indigo-600">
-        <h1 className="text-center border-b-2 border-indigo-500"> Detail Movies </h1>
-        <div class="flex flex-wrap ">
-          <div className="border-r-2">
-              <img src="https://upload.wikimedia.org/wikipedia/id/a/ad/Naruto_-_Shippuden_DVD_season_1_volume_1.jpg" alt="naruto"></img>
-          </div>
-          <div>
-            <h5 className="text-left"> Genre : </h5>
-                <h5 className="text-left"> Release Date : </h5>
-                <h5 className="text-left"> Duration : </h5>
-                <h5 className="text-left"> Companies : </h5>
-                <h5 className="text-left"> Status : </h5>
-                <h5 className="text-left"> Original Language :</h5>
-                <h5 className="text-left"> Overview :</h5>
-              </div>
+      <Container>
+        <div className="max-w-7xl mx-auto mt-8">
+          <div className="flex flex-wrap ">
+            <div className="w-full md:w-1/2 px-20">
+              <img src={`https://image.tmdb.org/t/p/w500${this.state.data?.poster_path}`} alt={this.props.title} />
+            </div>
+
+            <div className="w-full md:w-1/2 p-4 border-dashed border-2 border-color-black ">
+              <p className="font-bold text-4xl max-md mx-auto border-b-2 border-color-black">{this.state.data?.original_title}</p>
+              <p className="font-bold text-md max-md mx-auto my-5"> {this.state.data?.overview}</p>
+              <p className="font-bold text-md max-md mx-auto my-2"> Release Date : {this.state.data?.release_date}</p>
+              <p className="font-bold text-md max-md mx-auto my-2"> Duration : {this.state.data?.runtime} minute</p>
+              <p className="font-bold text-md max-md mx-auto my-2"> Language : {this.state.data?.original_language}</p>
+              <p className="font-bold text-md max-md mx-auto my-2"> Status : {this.state.data?.status}</p>
+              <p className="font-bold text-md max-md mx-auto my-2"> Popularity : {this.state.data?.popularity}</p>
+              <p className="font-bold text-md max-md mx-auto my-2"> Tagline : {this.state.data?.tagline}</p>
+            </div>
+
           </div>
         </div>
-    )
-  }
-}
 
-export default DetailsMovies;
+      </Container>
+    );
+  }
+};
+
+export default WithRouter(DetailsMovies);
