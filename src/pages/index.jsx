@@ -1,68 +1,70 @@
-import { Component } from "react";
-import "../styles/App.css";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import axios from "axios";
+import "styles/App.css";
 
-import { WithRouter } from "../utils/Navigations";
+import { WithRouter } from "utils/Navigations";
 
-import Layout from "../components/Layout";
-import Cards from "../components/Cards";
-import { ButtonsLoad } from "../components/Buttons";
+import Layout from "components/Layout";
+import Cards from "components/Cards";
+import Loading from "components/Loading";
+import { ButtonsLoad } from "components/Buttons";
+import alert from "components/Alert";
 
-class App extends Component {
-  state = {
-    title: "NOW PLAYING",
-    datas: [],
-    loading: true,
-    page : 1,
-  };
+function App (props) {
 
-  componentDidMount() {
-    this.fetchData();
-  }
+  const [datas, setDatas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [skeleton] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
-  fetchData() {
-    this.setState ({loading : true});
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  function fetchData() {
     axios
       .get (
-        `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_KEY}&page=${this.state.page}`
+        `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_KEY}&page=${page}`
       )
       .then ((res) => {
         const { results } = res.data;
-        const newPage = this.state.page + 1;
-        const temp = [...this.state.datas];
+        const newPage = page + 1;
+        const temp = [...datas];
         temp.push(...results);
-        this.setState({datas : temp, page : newPage});
+        setDatas(temp);
+        setPage(newPage);
       })
       .catch ((err) => {
-        console.log(err);
+        alert(err.toString());
       })
       .finally (() => {
-        this.setState ({ loading : false});
+        setLoading(false);
       });
   }
 
-  fetchPopular() {
+  function fetchPopular() {
     fetch(
-      `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_KEY}&page=${this.state.page}`
+      `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_KEY}&page=${page}`
     )
       .then((response) => response.json())
       .then((res) => {
-        const { results } = res; // destructuring
-        // const results = res.data.results;
-        const newPage = this.state.page + 1;
-        const temp = [...this.state.datas]; // spread operator
-        temp.push(...results); // spread operator
-        this.setState({ datas: temp, page: newPage });
+        const { results } = res;
+        const newPage = page + 1;
+        const temp = [...datas];
+        temp.push(...results);
+        setDatas(temp);
+        setPage(newPage);
       })
       .catch((err) => {
         alert(err.toString());
       })
       .finally(() => {
-        this.setState({ loading: false });
+        setLoading(false);
       });
   }
 
-  handleFav(movie) {
+  function handleFav (movie) {
     const getMovies = localStorage.getItem("favMovies");
     if (getMovies) {
       const parsedMovies = JSON.parse(getMovies);
@@ -82,33 +84,32 @@ class App extends Component {
     }
   }
 
-  render() {
     return (
       <Layout>
         <div>
-          <h1 className="text-color-black text-3xl font-jakarta-sans text-center py-5"> {this.state.title}</h1>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-4">
-            {this.state.datas.map((data) => (
+          {loading
+              ? skeleton.map(
+                  (item) => <Loading key={item} /> // Self Closing tag
+                )
+            : datas.map((data) => (
               <Cards
               key = {data.id}
               image = {data.poster_path}
               title = {data.title}
-              onNavigate={() =>
-                this.props.navigate(`/detail/${data.id}`)
-              }
-              addFavorite={() => this.handleFav(data)}
+              onNavigate={() => props.navigate(`/detail/${data.id}`)}
+              addFavorite={() => handleFav(data)}
               />
             ))}
           </div>
           <div className="flex flex-wrap justify-center py-5">
             <div>
-            <ButtonsLoad label="Load More" onClick={() => this.fetchData()} />
+            <ButtonsLoad label="Load More" onClick={() => fetchData()} />
             </div>
           </div>
         </div>
       </Layout>
     );
-  }
-}
+};
 
 export default WithRouter(App);

@@ -1,12 +1,11 @@
-import React, { Component } from 'react'
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "../pages/Index";
-import DetailMovies from "../pages/DetailsMovies";
-import Favorites from "../pages/Favorites";
+import Home from "pages/Index";
+import DetailMovies from "pages/DetailsMovies";
+import Favorites from "pages/Favorites";
 
-class App extends Component {
-  render() {
+function App (props) {
     return (
         <BrowserRouter>
         <Routes>
@@ -17,7 +16,6 @@ class App extends Component {
         </Routes>
         </BrowserRouter>
     );
-  }
-}
+};
 
 export default App;

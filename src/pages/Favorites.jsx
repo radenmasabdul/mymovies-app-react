@@ -1,47 +1,46 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 
-import { WithRouter } from "../utils/Navigations";
+import { WithRouter } from "utils/Navigations";
+import { useTitle } from "utils/hooks/useTitle";
 
-import Container from "../components/Layout";
-import Cards from "../components/Cards"
+import Container from "components/Layout";
+import Loading from "components/Loading";
+import Cards from "components/Cards";
 
-export class Favorites extends Component {
-  state = {
-    title: "MY FAVORITE MOVIES",
-    datas: [],
-    skeleton: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    loading: true,
-  };
+function Favorites () {
+  const [datas, setDatas] = useState([]);
+  const [skeleton] = useState ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const [loading, setLoading] = useState(true);
+  useTitle("My Favorite Movies");
 
-  componentDidMount() {
-    this.fetchData();
-  }
+  useEffect (() => {
+    fetchData();
+  }, []);
 
-  fetchData() {
+  function fetchData() {
     const getMovies = localStorage.getItem("favMovies");
     if (getMovies) {
       const parsedMovies = JSON.parse(getMovies);
-      this.setState({ datas: parsedMovies, loading: false });
+      setDatas(parsedMovies);
+      setLoading(false);
     }
   }
 
-  handleRemoveFav() {
+  function handleRemoveFav() {
     /*
     fungsi untuk menghapus film dari list favorite, clue-nya pake method filter.
     Setelah di filter, rubah state (this.state.datas) nya dengan yang sudah di filter dan juga localStorage.setItem lagi dengan value yang sudah di filter.
     */
-  
-    
-
-
   }
 
-  render() {
     return (
       <Container>
-        <h1 className="text-color-black text-3xl font-jakarta-sans text-center py-5"> {this.state.title}</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 m-4">
-          {this.state.datas.map((data) => (
+        {loading
+          ? skeleton.map(
+              (item) => <Loading key={item} />
+            )
+          : datas.map((data) => (
                 <Cards
                   key={data.id}
                   image={data.poster_path}
@@ -53,7 +52,6 @@ export class Favorites extends Component {
         </div>
       </Container>
     );
-  }
-}
+};
 
 export default WithRouter(Favorites);

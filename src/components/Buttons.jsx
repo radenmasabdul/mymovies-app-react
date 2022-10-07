@@ -1,27 +1,23 @@
-import React, { Component } from 'react';
+import React from "react";
 
-export class ButtonsFav extends Component {
-  render() {
+function ButtonsFav (props) {
     return (
       <button
         className="p-3 border rounded-lg bg-gray-500 text-white text-center font-jakarta-sans font-bold cursor-pointer"
-        onClick={this.props.onClick}
+        onClick={props.onClick}
       >
-        {this.props.label}
+        {props.label}
       </button>
     );
-  }
-}
+};
 
-export class ButtonsLoad extends Component {
-  render() {
+function ButtonsLoad (props) {
     return (
         <button className="p-3 border rounded-lg bg-gray-500 text-white text-center font-jakarta-sans font-bold cursor-pointer"
-        onClick={this.props.onClick}>
-            Load More {this.props.btnLoad}
+        onClick={props.onClick}>
+            Load More {props.btnLoad}
         </button>
-    )
-  }
-}
+    );
+};
 
-// export { ButtonsFav, ButtonsLoad };
+export { ButtonsFav, ButtonsLoad };
