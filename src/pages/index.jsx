@@ -100,7 +100,7 @@ function App (props) {
     return (
       <Layout>
         <div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-4 ">
           {loading
               ? skeleton.map(
                   (item) => <Loading key={item} /> // Self Closing tag

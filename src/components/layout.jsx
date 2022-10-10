@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { FaMoon } from "react-icons/fa";
 import { ThemeContext } from "utils/context";
 
-const  Layout = ({ children }) => {
+const Layout = ({ children }) => {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const { isLight, setIsLight } = useContext(ThemeContext);
   

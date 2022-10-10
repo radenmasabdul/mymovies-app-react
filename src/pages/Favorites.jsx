@@ -48,6 +48,7 @@ function Favorites (props) {
       if (result.isConfirmed) {
         localStorage.setItem("favMovies", JSON.stringify(deleteMovies));
         localStorage.removeItem(deleteMovies);
+        fetchData();
 
         Swal.fire(
           'Deleted!',
