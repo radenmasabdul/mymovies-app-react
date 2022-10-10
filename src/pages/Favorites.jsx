@@ -6,9 +6,10 @@ import { useTitle } from "utils/hooks/useTitle";
 
 import Container from "components/Layout";
 import Loading from "components/Loading";
-import Cards from "components/Cards";
+import {CardsFavorite} from "components/Cards";
+import Swal from "sweetalert2";
 
-function Favorites () {
+function Favorites (props) {
   const [datas, setDatas] = useState([]);
   const [skeleton] = useState ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const [loading, setLoading] = useState(true);
@@ -26,13 +27,36 @@ function Favorites () {
       setLoading(false);
     }
   }
-
-  function handleRemoveFav() {
+  
+  function handleRemoveFav(movie) {
     /*
     fungsi untuk menghapus film dari list favorite, clue-nya pake method filter.
     Setelah di filter, rubah state (this.state.datas) nya dengan yang sudah di filter dan juga localStorage.setItem lagi dengan value yang sudah di filter.
     */
-  }
+    let deleteMovies = JSON.parse(localStorage.getItem("favMovies"));
+    deleteMovies = deleteMovies.filter((item) => item.id !== movie.id);
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.setItem("favMovies", JSON.stringify(deleteMovies));
+        localStorage.removeItem(deleteMovies);
+
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted & reload your browser!',
+          'success'
+        )
+      }
+    })
+  };
 
     return (
       <Container>
@@ -42,12 +66,12 @@ function Favorites () {
               (item) => <Loading key={item} />
             )
           : datas.map((data) => (
-                <Cards
+                <CardsFavorite
                   key={data.id}
                   image={data.poster_path}
                   title={data.title}
-                  onNavigate={() => this.props.navigate(`/detail/${data.id}`)}
-                  addFavorite={() => this.handleRemoveFav(data)}
+                  onNavigate={() => props.navigate(`/detail/${data.id}`)}
+                  remove={() => handleRemoveFav(data)}
                 />
               ))}
         </div>

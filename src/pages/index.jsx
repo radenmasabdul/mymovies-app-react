@@ -6,9 +6,11 @@ import "styles/App.css";
 import { WithRouter } from "utils/Navigations";
 
 import Layout from "components/Layout";
-import Cards from "components/Cards";
+import {Cards} from "components/Cards";
 import Loading from "components/Loading";
 import { ButtonsLoad } from "components/Buttons";
+
+import Swal from "sweetalert2";
 
 function App (props) {
 
@@ -65,8 +67,11 @@ function App (props) {
 
   function handleFav (movie) {
     const getMovies = localStorage.getItem("favMovies");
+
     if (getMovies) {
       const parsedMovies = JSON.parse(getMovies);
+      const movieExist = parsedMovies.find(item => item.id === movie.id);
+
       /*
       cek film yang diinputkan ada di local storage atau tidak (saran menggunakan method .find)
       if movie.id === data.id
@@ -74,12 +79,21 @@ function App (props) {
       - kalau gak ada, push ke parsedMovies
       - kalau ada, kasih alert (film sudah ditambahkan sebelumnya)
       */
-      parsedMovies.push(movie);
+      
+      if (movieExist) {
+        Swal.fire("Movies are already in favorites!");
+      } else {
+        parsedMovies.push(movie);
+        
       const temp = JSON.stringify(parsedMovies);
       localStorage.setItem("favMovies", temp);
+      Swal.fire("Movies Added to Favorites!");
+      }
+
     } else {
       const temp = JSON.stringify([movie]);
       localStorage.setItem("favMovies", temp);
+      Swal.fire("Movies Added to Favorites!");
     }
   }
 

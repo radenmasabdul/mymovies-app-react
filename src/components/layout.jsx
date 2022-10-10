@@ -5,6 +5,7 @@ import { FaSun } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { FaMoon } from "react-icons/fa";
 import { ThemeContext } from "utils/context";
 
 const  Layout = ({ children }) => {
@@ -13,7 +14,7 @@ const  Layout = ({ children }) => {
   
     return (
       <>
-      <nav className="flex flex-wrap items-center justify-between px-2 py-3 bg-color-aqua sticky top-0">
+      <nav className="flex flex-wrap items-center justify-between px-2 py-3 bg-color-aqua sticky top-0 z-50">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           <div className="w-full flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
             <Link to="/">
@@ -41,17 +42,17 @@ const  Layout = ({ children }) => {
               <li className="nav-item">
                 <button className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75">
                     <span className="ml-2">
-                      <SearchBar></SearchBar>
+                      <SearchBar/>
                     </span>
                 </button>
               </li>
 
               <li className="nav-item">
                 <button className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                label={isLight ? "Light Mode" : "Dark Mode"}
                 onClick={() => setIsLight(!isLight)}>
                   <span className="ml-2">
-                    <FaSun className="text-white text-4xl"></FaSun>
+                    <FaSun className={`text-white text-4xl ${isLight ? "" : "hidden"}`}/>
+                    <FaMoon className={`text-white text-4xl ${isLight ? "hidden" : ""}`}/>
                   </span>
                 </button>
               </li>
@@ -60,7 +61,7 @@ const  Layout = ({ children }) => {
                 <Link to="/Favorites">
                   <button className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75">
                     <span className="ml-2">
-                      <MdFavorite className="text-white text-4xl"></MdFavorite>
+                      <MdFavorite className="text-white text-4xl"/>
                     </span>
                   </button>
                 </Link>
