@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useState, useMemo, useEffect} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "pages/Index";
 import DetailMovies from "pages/DetailsMovies";
 import Favorites from "pages/Favorites";
 
-function App (props) {
+import { ThemeContext } from "utils/context";
+
+function App () {
+  const [isLight, setIsLight] = useState (true);
+  const theme = useMemo (() => ({ isLight, setIsLight}), [isLight]);
+
+  useEffect (() => {
+    if (isLight) {
+      document.documentElement.classList.remove("dark");
+    } else {
+      document.documentElement.classList.add("dark");
+    }
+  }, [isLight]);
+
     return (
+      <ThemeContext.Provider value={theme} >
         <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home /> } />
@@ -15,6 +29,7 @@ function App (props) {
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
         </BrowserRouter>
+      </ThemeContext.Provider>
     );
 };
 

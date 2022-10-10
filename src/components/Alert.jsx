@@ -1,26 +1,24 @@
-import Alert from "react-bootstrap/Alert";
+import React  from "react";
+import Swal from "sweetalert2";
 
-function AlertExample() {
-  return (
-    <>
-      {[
-        'primary',
-        'secondary',
-        'success',
-        'danger',
-        'warning',
-        'info',
-        'light',
-        'dark',
-      ].map((variant) => (
-        <Alert key={variant} variant={variant}>
-          This is a {variant} alert with{' '}
-          <Alert.Link href="#">an example link</Alert.Link>. Give it a click if
-          you like.
-        </Alert>
-      ))};
-    </>
-  );
+function Alert (props) {
+  // eslint-disable-next-line no-undef
+  showAlert = () => {
+    Swal.fire({
+        title: "Success",
+        text: "Alert successful",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
 };
 
-export default AlertExample;
+    return (
+      <div className="container d-flex justify-content-center" style={{marginTop: 90}}>
+               <button className="btn btn-primary btn-lg" label="Show Alert" onClick={() => alert('this.showAlert')}>
+        {props.onClick}
+              </button>
+      </div>
+    );
+};
+
+export default Alert;

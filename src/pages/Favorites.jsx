@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 
 import { WithRouter } from "utils/Navigations";
@@ -47,7 +48,7 @@ function Favorites () {
                   title={data.title}
                   onNavigate={() => this.props.navigate(`/detail/${data.id}`)}
                   addFavorite={() => this.handleRemoveFav(data)}
-                /> // <~ Self closing tag
+                />
               ))}
         </div>
       </Container>

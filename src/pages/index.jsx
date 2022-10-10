@@ -9,7 +9,6 @@ import Layout from "components/Layout";
 import Cards from "components/Cards";
 import Loading from "components/Loading";
 import { ButtonsLoad } from "components/Buttons";
-import alert from "components/Alert";
 
 function App (props) {
 
