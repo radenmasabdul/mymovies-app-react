@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import "styles/App.css";
 
+import { setFavorites } from "utils/redux/reducers/reducer";
 import { WithRouter } from "utils/Navigations";
 
-import Layout from "components/Layout";
+import Container from "components/Layout";
 import {Cards} from "components/Cards";
 import Loading from "components/Loading";
 import { ButtonsLoad } from "components/Buttons";
@@ -13,7 +15,7 @@ import { ButtonsLoad } from "components/Buttons";
 import Swal from "sweetalert2";
 
 function App (props) {
-
+  const dispatch = useDispatch ();
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -86,20 +88,22 @@ function App (props) {
         parsedMovies.push(movie);
         
       const temp = JSON.stringify(parsedMovies);
+      dispatch(setFavorites(parsedMovies));
       localStorage.setItem("favMovies", temp);
       Swal.fire("Movies Added to Favorites!");
       }
 
     } else {
       const temp = JSON.stringify([movie]);
+      dispatch(setFavorites([movie]));
       localStorage.setItem("favMovies", temp);
       Swal.fire("Movies Added to Favorites!");
     }
   }
 
     return (
-      <Layout>
-        <div>
+      <Container>
+        <div className="w-full flex flex-col">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-4 ">
           {loading
               ? skeleton.map(
@@ -121,7 +125,7 @@ function App (props) {
             </div>
           </div>
         </div>
-      </Layout>
+      </Container>
     );
 };
 

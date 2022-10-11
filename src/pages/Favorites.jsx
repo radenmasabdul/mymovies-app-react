@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { WithRouter } from "utils/Navigations";
 import { useTitle } from "utils/hooks/useTitle";
@@ -8,25 +9,12 @@ import Container from "components/Layout";
 import Loading from "components/Loading";
 import {CardsFavorite} from "components/Cards";
 import Swal from "sweetalert2";
+import { setFavorites } from "utils/redux/reducers/reducer";
 
 function Favorites (props) {
-  const [datas, setDatas] = useState([]);
-  const [skeleton] = useState ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const [loading, setLoading] = useState(true);
+  const favorites = useSelector ((state) => state.data.favorites);
+  const dispatch = useDispatch ();
   useTitle("My Favorite Movies");
-
-  useEffect (() => {
-    fetchData();
-  }, []);
-
-  function fetchData() {
-    const getMovies = localStorage.getItem("favMovies");
-    if (getMovies) {
-      const parsedMovies = JSON.parse(getMovies);
-      setDatas(parsedMovies);
-      setLoading(false);
-    }
-  }
   
   function handleRemoveFav(movie) {
     /*
@@ -46,13 +34,14 @@ function Favorites (props) {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
+        dispatch(setFavorites([movie]));
         localStorage.setItem("favMovies", JSON.stringify(deleteMovies));
+        dispatch(setFavorites(deleteMovies));
         localStorage.removeItem(deleteMovies);
-        fetchData();
 
         Swal.fire(
           'Deleted!',
-          'Your file has been deleted & reload your browser!',
+          'Your file has been deleted!',
           'success'
         )
       }
@@ -62,11 +51,7 @@ function Favorites (props) {
     return (
       <Container>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 m-4">
-        {loading
-          ? skeleton.map(
-              (item) => <Loading key={item} />
-            )
-          : datas.map((data) => (
+        {favorites.map((data) => (
                 <CardsFavorite
                   key={data.id}
                   image={data.poster_path}
