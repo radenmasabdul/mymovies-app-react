@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useMemo, useEffect} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import Home from "pages/Index";
+import Home from "pages";
 import DetailMovies from "pages/DetailsMovies";
 import Favorites from "pages/Favorites";
 
