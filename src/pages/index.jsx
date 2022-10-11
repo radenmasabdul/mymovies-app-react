@@ -104,7 +104,7 @@ function App (props) {
     return (
       <Container>
         <div className="w-full flex flex-col">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-4 ">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-4 my-4">
           {loading
               ? skeleton.map(
                   (item) => <Loading key={item} /> // Self Closing tag
